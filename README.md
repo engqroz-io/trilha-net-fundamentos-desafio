@@ -36,3 +36,105 @@ Por último, deverá ser feito um menu interativo com as seguintes ações imple
 
 ## Solução
 O código está pela metade, e você deverá dar continuidade obedecendo as regras descritas acima, para que no final, tenhamos um programa funcional. Procure pela palavra comentada "TODO" no código, em seguida, implemente conforme as regras acima.
+
+---
+
+# Configuração de Debug (VSCode)
+
+## 1. Instalação do .NET 6.0
+
+Para debugar a aplicação, é necessário ter o .NET 6.0 SDK instalado em sua máquina.
+
+**Passos de instalação:**
+- Acesse o site oficial: https://dotnet.microsoft.com/download/dotnet/6.0
+- Faça o download do SDK do .NET 6.0 para seu sistema operacional
+- Execute o instalador seguindo as instruções na tela
+- Após a instalação, abra um terminal e execute o comando abaixo para verificar a instalação:
+  ```
+  dotnet --version
+  ```
+  Você deverá ver a versão do .NET instalada (6.0.x)
+
+## 2. Configuração do arquivo tasks.json
+
+O arquivo `.vscode/tasks.json` define as tarefas de build do projeto.
+
+- Define uma tarefa chamada "build" que executa o comando `dotnet build`
+- Compila o projeto especificado em `DesafioFundamentos.csproj`
+- Gera caminhos completos para melhorar a legibilidade dos erros de compilação
+- É configurada como a tarefa de build padrão do workspace
+
+**Configuração atual:**
+```json
+{
+    "label": "build",
+    "command": "dotnet",
+    "type": "process",
+    "args": [
+        "build",
+        "${workspaceFolder}/trilha-net-fundamentos-desafio/DesafioFundamentos/DesafioFundamentos.csproj",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+    ],
+    "group": {
+        "kind": "build",
+        "isDefault": true
+    },
+    "problemMatcher": "$msCompile"
+}
+```
+
+## 3. Configuração do arquivo launch.json
+
+O arquivo `.vscode/launch.json` configura o debugador do VS Code para a aplicação.
+
+- **name**: Nome da configuração de debug
+- **type**: Define como "coreclr" para aplicações .NET
+- **request**: Define como "launch" para iniciar o programa
+- **preLaunchTask**: Executa a tarefa de build antes de iniciar o debug (definida no tasks.json)
+- **program**: Caminho completo para o arquivo DLL compilado
+- **cwd**: Diretório de trabalho da aplicação
+- **console**: Define como "integratedTerminal" para usar o terminal integrado do VS Code
+
+**Configuração atual:**
+```json
+{
+    "name": ".NET Core Launch (console)",
+    "type": "coreclr",
+    "request": "launch",
+    "preLaunchTask": "build",
+    "program": "${workspaceFolder}/trilha-net-fundamentos-desafio/DesafioFundamentos/bin/Debug/net6.0/DesafioFundamentos.dll",
+    "args": [],
+    "cwd": "${workspaceFolder}/trilha-net-fundamentos-desafio/DesafioFundamentos",
+    "console": "integratedTerminal",
+    "stopAtEntry": false
+}
+```
+
+**Como usar:**
+- Abra o arquivo que deseja debugar
+- Clique na numeração à esquerda para adicionar breakpoints (pontos de parada)
+- Pressione `F5` ou acesse a aba "Run and Debug" para iniciar a sessão de debug
+- O programa parará nos breakpoints, permitindo inspecionar variáveis e acompanhar a execução
+
+## 4. Configuração do arquivo launchSettings.json
+
+O arquivo `Properties/launchSettings.json` define as configurações de launch do projeto .NET por padrão e atualmente contém:
+
+- **profiles**: Define os perfis de execução disponíveis
+- **DesafioFundamentos**: Nome do perfil de execução
+- **commandName**: Define como "Project" para executar como um projeto .NET
+
+**Configuração atual:**
+```json
+{
+    "profiles": {
+        "DesafioFundamentos": {
+            "commandName": "Project"
+        }
+    }
+}
+```
+
+Este arquivo garante que ao executar a aplicação (via `dotnet run` ou através do VS Code), o projeto seja executado corretamente com as configurações padrão do .NET.
+
